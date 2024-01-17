@@ -1,0 +1,18 @@
+1-embed:
+  dataset: 'R1'
+  batch_size: 100
+  output: './1-output.pt'
+2-aflite:
+  phi: './1-output.pt'  # input data path, must be loadable by torch.load
+  L: 'LinearSGD' # SVM or LinearSGD. SVM is very slow.
+  m: 64 # m means to try hypothesis on the training set, it must be large enough e.g. 10 or 64 to make AFLite not filtering out good data.
+  t: 1540 # 50k / 550k # training set size for each way of partitioning
+  tau: 0.75 # 0 will make the termination condition totally up to n
+  k: 308 # 10k / 550k # k controlls the speed of the reduction
+  n: 5649 # 0 will make the termination condition totally up to tau
+  output: './2-output-snli-like.pt'  # output data path, it is loadable by torch.load
+3-dedup:
+  dataset: 'R1'
+3-train:
+  input: '2-output-snli-like.pt'
+  dataset: 'R1'
